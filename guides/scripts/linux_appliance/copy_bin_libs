@@ -2,8 +2,23 @@
 
 #set -x
 
+export MYINIT=${MYINIT:=''}
 export BINS=${BINS:=''}
 export LIBS=${LIBS:=''}
+
+USAGE="Simple bash script to copy system libraries from local kernel to new initramfs, example usage:\n\nBINS=\"bash ls echo env ln mkdir mknod mount pwd umount cat head tail wc ps ip lsblk lspci lsmod halt poweroff reboot\" MYINIT=<initramfs_name> ./copy_bin_libs"
+
+function usage() {
+    echo -e $USAGE
+    exit -1
+}
+
+[[ -z $BINS || -z $MYINIT ]] && usage
+
+if [[ ! -d $MYINIT ]]; then
+    echo "Folder ${MYINIT} does not exist."
+    usage
+fi
 
 ## function that iterates through each library
 ## and creates the corresponding directory
@@ -16,8 +31,8 @@ function copy_libs
 	echo $libs
 	echo $libs_dir
 	
-	mkdir -p ".${libs_dir}"
-	cp $libs ".${libs_dir}"
+	mkdir -p "./${MYINIT}/${libs_dir}"
+	cp $libs "./${MYINIT}/${libs_dir}"
     done
 }
 
@@ -33,8 +48,8 @@ for bins in ${BINS}; do
     echo $bins_dir_loc
     
     ## set up directory tree and copy bins here
-    mkdir -p ".${bins_dir_loc}"
-    cp $bins_loc ".${bins_dir_loc}"
+    mkdir -p "./${MYINIT}/${bins_dir_loc}"
+    cp $bins_loc "./${MYINIT}/${bins_dir_loc}"
 
     #-------------------------------------------------------------------------#
     

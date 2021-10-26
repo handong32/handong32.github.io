@@ -1,8 +1,20 @@
 #!/bin/bash
 
+#set -x
+
+# enable bash hash functions
 set +h
 
-export MYINIT=${MYINIT:=''}
+
+USAGE="Create a simple set of folders for a small initramfs, example:\n\n./create_initramfs <folder name>"
+
+function usage() {
+    echo e$USAGE
+    exit -1
+}
+
+MYINIT=$1
+[[ -z $MYINIT ]] && usage
 
 #####################################################################################
 # https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
@@ -14,22 +26,148 @@ export MYINIT=${MYINIT:=''}
 # https://ibug.io/blog/2019/04/os-lab-1/
 #####################################################################################
 
-mkdir -pv ${MYINIT}
+#[[ -e ${MYINIT} ]] || mkdir -pv ${MYINIT}
 
-mkdir -pv ${MYINIT}/{bin,boot,dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
+if [[ -e ${MYINIT} ]]; then
+    echo "${MYINIT} already exist, skipping initramfs creation."
+else
 
-mkdir -pv ${MYINIT}/{proc,media/{floppy,cdrom},sbin,srv,sys}
-mkdir -pv ${MYINIT}/var/{lock,log,mail,run,spool}
-mkdir -pv ${MYINIT}/var/{opt,cache,lib/{misc,locate},local}
-install -dv -m 0750 ${MYINIT}/root
-install -dv -m 1777 ${MYINIT}{/var,}/tmp
-install -dv ${MYINIT}/etc/init.d
-mkdir -pv ${MYINIT}/usr/{,local/}{bin,include,lib{,64},sbin,src}
-mkdir -pv ${MYINIT}/usr/{,local/}share/{doc,info,locale,man}
-mkdir -pv ${MYINIT}/usr/{,local/}share/{misc,terminfo,zoneinfo}
-mkdir -pv ${MYINIT}/usr/{,local/}share/man/man{1,2,3,4,5,6,7,8}
-for dir in ${MYINIT}/usr{,/local}; do
-    ln -sv share/{man,doc,info} ${dir}
-done
+    echo "Creating ${MYINIT} directory structures..."
+    
+    ## set up directory structure
+    mkdir -pv ${MYINIT}
+    mkdir -pv ${MYINIT}/{bin,boot,dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
+    mkdir -pv ${MYINIT}/{proc,media/{floppy,cdrom},sbin,srv,sys}
+    mkdir -pv ${MYINIT}/var/{lock,log,mail,run,spool}
+    mkdir -pv ${MYINIT}/var/{opt,cache,lib/{misc,locate},local}
+    install -dv -m 0750 ${MYINIT}/root
+    install -dv -m 1777 ${MYINIT}{/var,}/tmp
+    install -dv ${MYINIT}/etc/init.d
+    mkdir -pv ${MYINIT}/usr/{,local/}{bin,include,lib{,64},sbin,src}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/{doc,info,locale,man}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/{misc,terminfo,zoneinfo}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/man/man{1,2,3,4,5,6,7,8}
+    for dir in ${MYINIT}/usr{,/local}; do
+	ln -sv share/{man,doc,info} ${dir}
+    done
 
-echo "root::0:0:root:/root:/bin/bash" > ${MYINIT}/etc/passwd
+    ## set up root user info
+    cat > ${MYINIT}/etc/passwd <<EOF
+root::0:0:root:/root:/bin/ash
+EOF
+    
+    cat > ${MYINIT}/etc/group <<EOF
+root:x:0:
+bin:x:1:
+sys:x:2:
+kmem:x:3:
+tty:x:4:
+daemon:x:6:
+disk:x:8:
+dialout:x:10:
+video:x:12:
+utmp:x:13:
+usb:x:14:
+EOF
+
+    ## dir structure
+    cat > ${MYINIT}/etc/fstab <<EOF
+# file system  mount-point  type   options          dump  fsck
+#                                                         order
+
+rootfs          /               auto    defaults        1      1
+proc            /proc           proc    defaults        0      0
+sysfs           /sys            sysfs   defaults        0      0
+devpts          /dev/pts        devpts  gid=4,mode=620  0      0
+tmpfs           /dev/shm        tmpfs   defaults        0      0
+EOF
+
+    ## bash profile
+    cat > ${MYINIT}/etc/profile <<EOF
+# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
+# and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
+
+if [ "`id -u`" -eq 0 ]; then
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+else
+  PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+fi
+export PATH
+
+if [ "${PS1-}" ]; then
+  if [ "${BASH-}" ] && [ "$BASH" != "/bin/sh" ]; then
+    # The file bash.bashrc already sets the default PS1.
+    # PS1='\h:\w\$ '
+    if [ -f /etc/bash.bashrc ]; then
+      . /etc/bash.bashrc
+    fi
+  else
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='# '
+    else
+      PS1='$ '
+    fi
+  fi
+fi
+
+if [ -d /etc/profile.d ]; then
+  for i in /etc/profile.d/*.sh; do
+    if [ -r $i ]; then
+      . $i
+    fi
+  done
+  unset i
+fi
+EOF
+
+    ## set up MISC
+    cat > ${MYINIT}/etc/hostname <<EOF
+myhostname
+EOF
+
+    cat > ${MYINIT}/etc/issue <<EOF
+Linux Custom Appliance
+Kernel \r on an \m
+
+EOF
+
+    ## create an ini file (note: not using systemd)
+    cat > ${MYINIT}/init <<EOF
+#!/bin/bash
+
+set -x
+export HOME=/root
+export LOGNAME=root
+export TERM=vt100
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+export ENV="HOME=\$HOME LOGNAME=\$LOGNAME TERM=\$TERM PATH=\$PATH"
+
+# setup standard file system view
+mount -t proc /proc /proc
+mount -t sysfs /sys /sys
+
+# take care of /dev 1) try using devtmpfs and devpts or 2) dev of exiting fs and devpts
+if ! mount -t devtmpfs -o mode=0755 udev /dev; then
+  # failed to mount devtmpfs
+  # so add a few useful things if not already in file system
+  echo "W: devtmpfs not available, falling back to tmpfs for /dev"
+  [[ -e /dev/console ]] || mknod -m 0600 /dev/console c 5 1
+  [[ -e /dev/null ]] || mknod /dev/null c 1 3
+  [[ -e /dev/zero ]] || mknod /dev/zero c 1 5
+  [[ -e /dev/random ]] || mknod /dev/random c 1 8
+  [[ -e /dev/urandom ]] || mknod /dev/urandom c 1 9
+fi 
+
+[[ -e /dev/pts ]] || mkdir /dev/pts
+mount -t devpts devpts /dev/pts
+
+# Some things don't work properly without /etc/mtab.
+ln -sf /proc/mounts /etc/mtab
+
+# if we get here then we might as well start a shell :-) 
+/bin/bash
+
+halt -p -f -d
+
+EOF
+fi
