@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set +h
+
+export MYINIT=${MYINIT:=''}
+
+#####################################################################################
+# https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+# https://wiki.debian.org/initramfs/
+# https://wiki.gentoo.org/wiki/Custom_Initramfs
+# https://lyngvaer.no/log/create-linux-initramfs
+# https://www.kernel.org/doc/html/latest/admin-guide/initrd.html
+# https://www.linuxfromscratch.org/blfs/view/cvs/postlfs/initramfs.html
+# https://ibug.io/blog/2019/04/os-lab-1/
+#####################################################################################
+
+mkdir -pv ${MYINIT}
+
+mkdir -pv ${MYINIT}/{bin,boot,dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
+
+mkdir -pv ${MYINIT}/{proc,media/{floppy,cdrom},sbin,srv,sys}
+mkdir -pv ${MYINIT}/var/{lock,log,mail,run,spool}
+mkdir -pv ${MYINIT}/var/{opt,cache,lib/{misc,locate},local}
+install -dv -m 0750 ${MYINIT}/root
+install -dv -m 1777 ${MYINIT}{/var,}/tmp
+install -dv ${MYINIT}/etc/init.d
+mkdir -pv ${MYINIT}/usr/{,local/}{bin,include,lib{,64},sbin,src}
+mkdir -pv ${MYINIT}/usr/{,local/}share/{doc,info,locale,man}
+mkdir -pv ${MYINIT}/usr/{,local/}share/{misc,terminfo,zoneinfo}
+mkdir -pv ${MYINIT}/usr/{,local/}share/man/man{1,2,3,4,5,6,7,8}
+for dir in ${MYINIT}/usr{,/local}; do
+    ln -sv share/{man,doc,info} ${dir}
+done
+
+echo "root::0:0:root:/root:/bin/bash" > ${MYINIT}/etc/passwd

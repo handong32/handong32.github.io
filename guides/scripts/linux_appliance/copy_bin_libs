@@ -1,17 +1,60 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 export BINS=${BINS:=''}
+export LIBS=${LIBS:=''}
 
-## From: https://www.commandlinefu.com/commands/view/10238/copy-all-shared-libraries-for-a-binary-to-directory
-## xargs is used to redirect the input from awk (which are the libraries used by the function)
-## to cp in a more managed way as Linux sets a limit on filename length that can be passed
+## function that iterates through each library
+## and creates the corresponding directory
+## and copy the binaries over
+function copy_libs
+{
+    for libs in ${LIBS}; do
+	libs_dir=$(dirname $libs)
+	
+	echo $libs
+	echo $libs_dir
+	
+	mkdir -p ".${libs_dir}"
+	cp $libs ".${libs_dir}"
+    done
+}
+
 ## all we do is copy the files into the proper directory in the initrd
 for bins in ${BINS}; do
-    #ldd /bin/ls | grep "=> /" | awk '{print $3}' | xargs -I '{}' sudo cp -v '{}' ./lib64
-    ldd $bins | grep "=> /" | awk '{print $3}' | xargs -I '{}' sudo ls '{}'
-    ldd $bins | grep "=> /" | awk '{print $3}' | xargs -I '{}' dirname '{}' | xargs -I '{}' mkdir -p '.{}'
+
+    echo $bins
+    ## figure out where binary lives
+    bins_loc=$(which $bins)
+    bins_dir_loc=$(which $bins | xargs -I '{}' dirname '{}')    
+
+    echo $bins_loc
+    echo $bins_dir_loc
+    
+    ## set up directory tree and copy bins here
+    mkdir -p ".${bins_dir_loc}"
+    cp $bins_loc ".${bins_dir_loc}"
+
+    #-------------------------------------------------------------------------#
+    
+    ## figure out library dependencies of $bins
+    libs_loc=$(ldd $bins_loc | grep "=> /" | awk '{print $3}')
+    ## set up directory tree and copy libs here
+    LIBS="$libs_loc" copy_libs
+
+    echo '#-------------------------------------------------------------------------#'
+
+
+    
+    ######################################
+    # TODO: Uncomment incase you need to copy
+    #       libraries that other libraries depend on, hopefully not too recursively messy
+    #for libs in ${libs_loc}; do
+    #libs_dep_loc=$(ldd $libs | grep "=> /" | awk '{print $3}')
+    #LIBS="$libs_dep_loc" copy_libs
+    #done
+    #####################################            
 done
 
 #sudo strace -e trace=open,openat /bin/ls
