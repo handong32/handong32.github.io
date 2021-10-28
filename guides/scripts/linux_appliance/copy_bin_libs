@@ -51,6 +51,16 @@ for bins in ${BINS}; do
     mkdir -p "./${MYINIT}/${bins_dir_loc}"
     cp $bins_loc "./${MYINIT}/${bins_dir_loc}"
 
+    ## misc stuff for init to work
+    if [[ "$bins" == "bash" ]]; then
+	## need to have /bin/bash
+	cp $bins_loc "./${MYINIT}/bin/"
+
+	## need to copy over Linux dynamic linker
+	dyn_linker_loc=$(ldd $bins_loc | grep "ld-linux" | awk '{print $1}')
+	dyn_linker_dir_loc=$(dirname $dyn_linker_loc)
+	cp $dyn_linker_loc "./${MYINIT}/$dyn_linker_dir_loc"
+    fi    
     #-------------------------------------------------------------------------#
     
     ## figure out library dependencies of $bins
@@ -59,8 +69,6 @@ for bins in ${BINS}; do
     LIBS="$libs_loc" copy_libs
 
     echo '#-------------------------------------------------------------------------#'
-
-
     
     ######################################
     # TODO: Uncomment incase you need to copy
@@ -73,3 +81,4 @@ for bins in ${BINS}; do
 done
 
 #sudo strace -e trace=open,openat /bin/ls
+#find . | cpio -o -H newc > ../sample_initramfs.cpio

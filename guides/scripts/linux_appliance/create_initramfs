@@ -170,4 +170,7 @@ ln -sf /proc/mounts /etc/mtab
 halt -p -f -d
 
 EOF
+
+    ## set permissions for init
+    chmod 755 ${MYINIT}/init
 fi
