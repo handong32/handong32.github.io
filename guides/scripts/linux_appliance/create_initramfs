@@ -173,4 +173,10 @@ EOF
 
     ## set permissions for init
     chmod 755 ${MYINIT}/init
+
+    ## create script for cpio-ing initramfs
+    cat > ${MYINIT}/cpio_initramfs <<EOF
+find . | cpio -o -H newc > ../${MYINIT}.cpio
+EOF
+    chmod +x ${MYINIT}/cpio_initramfs
 fi
