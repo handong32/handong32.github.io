@@ -8,8 +8,12 @@ As recently discussed in https://www.usenix.org/publications/loginonline/musings
 Furthermore in a recent paper published in SOSP'19: "An Analysis of Performance Evolution of Linux’s Core Operations", the authors demonstrated how Linux's configuration settings can have significant performance impacts on an application. This also motivates the overall premise of how much of Linux's default configuration does a kernel really need to be *functional* and how much complexity can thus be stripped out to run a minimum set of binaries? For example, following suggestions in this paper, I was able to build and boot a Linux-5.4.0 kernel with a custom config file that is less than 50% the length of a default Linux configuration.
 
 ## Goals
-There are many tutorials online to build your own Linux kernel and initramfs. However, their usecases are typically too general and the goal with this tutorial is to demonstrate the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. Concretely, here are the following goals of this tutorial:
+There are many tutorials online to build your own Linux kernel and initramfs. However, their usecases are typically too general and the goal with this tutorial is to demonstrate the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. Concretely, here are the following steps in this tutorial towards this goal:
 
-1.
-
-In this tutorial, there will be code to show how to build the kernel, modules, initramfs, how to get binaries running in a minimal environment, and images of the boot process on my laptop and how to bootstrap a simple PXEBOOT between two computers
+1. Create an initial initframs
+2. Build a basic Linux kernel
+3. How to get simple binaries to run
+4. How to boot appliance via GRUB
+5. How to get device drivers working
+6. Modiyfing /init for experiments
+7. Booting via PXEBOOT protocol in a local network
