@@ -10,10 +10,42 @@ Furthermore in a recent paper published in SOSP'19: "An Analysis of Performance 
 ## Goals
 There are many tutorials online to build your own Linux kernel and initramfs. However, their usecases are typically too general and the goal with this tutorial is to demonstrate the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. Concretely, here are the following steps in this tutorial towards this goal:
 
-1. Create an initial initframs
+1. Create an initial initramfs
 2. Build a basic Linux kernel
 3. How to get simple binaries to run
 4. How to boot appliance via GRUB
 5. How to get device drivers working
 6. Modiyfing /init for experiments
 7. Booting via PXEBOOT protocol in a local network
+
+## Preparation
+
+
+## 1. Create an initial initramfs
+```
+    ## set up directory structure
+    mkdir -pv ${MYINIT}
+    mkdir -pv ${MYINIT}/{bin,boot,dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
+    mkdir -pv ${MYINIT}/{proc,media/{floppy,cdrom},sbin,srv,sys}
+    mkdir -pv ${MYINIT}/var/{lock,log,mail,run,spool}
+    mkdir -pv ${MYINIT}/var/{opt,cache,lib/{misc,locate},local}
+    install -dv -m 0750 ${MYINIT}/root
+    install -dv -m 1777 ${MYINIT}{/var,}/tmp
+    install -dv ${MYINIT}/etc/init.d
+    mkdir -pv ${MYINIT}/usr/{,local/}{bin,include,lib{,64},sbin,src}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/{doc,info,locale,man}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/{misc,terminfo,zoneinfo}
+    mkdir -pv ${MYINIT}/usr/{,local/}share/man/man{1,2,3,4,5,6,7,8}
+    for dir in ${MYINIT}/usr{,/local}; do
+	ln -sv share/{man,doc,info} ${dir}
+    done
+```
+
+## External Resources
+* https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+* https://wiki.debian.org/initramfs/
+* https://wiki.gentoo.org/wiki/Custom_Initramfs
+* https://lyngvaer.no/log/create-linux-initramfs
+* https://www.kernel.org/doc/html/latest/admin-guide/initrd.html
+* https://www.linuxfromscratch.org/blfs/view/cvs/postlfs/initramfs.html
+* https://ibug.io/blog/2019/04/os-lab-1/
