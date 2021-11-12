@@ -7,8 +7,12 @@ As recently discussed in https://www.usenix.org/publications/loginonline/musings
 
 Furthermore in a recent paper published in SOSP'19: "An Analysis of Performance Evolution of Linux’s Core Operations", the authors demonstrated how Linux's configuration settings can have significant performance impacts on an application. This also motivates the overall premise of how much of Linux's default configuration does a kernel really need to be *functional* and how much complexity can thus be stripped out to run a minimum set of binaries? For example, following suggestions in this paper, I was able to build and boot a Linux-5.4.0 kernel with a custom config file that is less than 50% the length of a default Linux configuration.
 
+Beyond these, another side benefit of a custom Linux appliance is that the root filesystem is loaded as a RAM disk by default; which is another positive for researchers who want to minimize system noise from disk paging as all executables are now run out from memory. Obviously, other considerations are needed should the experiments require data from a external storage device.
+
 ## Goals
-There are many tutorials online to build your own Linux kernel and initramfs. However, their usecases are typically too general and the goal with this tutorial is to demonstrate the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. Concretely, here are the following steps in this tutorial towards this goal:
+There are many tutorials online to build your own Linux kernel and initramfs, however, their usecases are typically too general and the steps involved can be quite complex. This tutorial will demonstrate that it is infact surprsingly easy to get a barebones Linux up and running that is ready to execute some simple binaries. The tutorial will cover the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. 
+
+Concretely, here are the following steps in this tutorial towards this goal:
 
 1. Create an initial initramfs
 2. Build a basic Linux kernel
