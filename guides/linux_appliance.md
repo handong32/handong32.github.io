@@ -148,6 +148,12 @@ EOF
 chmod 755 ${MYINIT}/init
 ```
 
+Next, we will compress the initramfs into a cpio format
+```
+cd ${MYINIT}
+find . | cpio -o -H newc > ../${MYINIT}.cpio
+```
+
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 * https://wiki.debian.org/initramfs/
