@@ -150,9 +150,28 @@ chmod 755 ${MYINIT}/init
 
 Next, we will compress the initramfs into a cpio format
 ```
+## make sure you are inside the $MYINIT directory
 cd ${MYINIT}
 find . | cpio -o -H newc > ../${MYINIT}.cpio
 ```
+
+## Getting binaries to run
+The */init* created above is the first script is run to set up various Linux subsystems. Examining it, one can see that #!/bin/bash is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
+
+```
+## From /init file above, we see that the following programs will be needed: bash, mount, echo, mkdir, ln, poweroff
+
+## figure out where binary lives
+ubuntu:~$ which bash
+/usr/bin/bash
+ubuntu:~$ which bash | xargs -I '{}' dirname '{}'
+/usr/bin
+
+## copy bash to correct directory in initramfs
+ubuntu:~$ cp /usr/bin/bash ${MYINIT}/usr/bin/
+
+```
+
 
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
