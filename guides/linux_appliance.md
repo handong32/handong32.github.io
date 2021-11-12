@@ -25,24 +25,78 @@ Concretely, here are the following steps in this tutorial towards this goal:
 ## Preparation
 Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary is runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries of the OS to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the exiting OS to ensure system library compatibility. 
 
-## 1. Create an initial initramfs
+## Steps to create an initramfs
+
+First, create a name for your initramfs file
 ```
-    ## set up directory structure
-    mkdir -pv ${MYINIT}
-    mkdir -pv ${MYINIT}/{bin,boot,dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
-    mkdir -pv ${MYINIT}/{proc,media/{floppy,cdrom},sbin,srv,sys}
-    mkdir -pv ${MYINIT}/var/{lock,log,mail,run,spool}
-    mkdir -pv ${MYINIT}/var/{opt,cache,lib/{misc,locate},local}
-    install -dv -m 0750 ${MYINIT}/root
-    install -dv -m 1777 ${MYINIT}{/var,}/tmp
-    install -dv ${MYINIT}/etc/init.d
-    mkdir -pv ${MYINIT}/usr/{,local/}{bin,include,lib{,64},sbin,src}
-    mkdir -pv ${MYINIT}/usr/{,local/}share/{doc,info,locale,man}
-    mkdir -pv ${MYINIT}/usr/{,local/}share/{misc,terminfo,zoneinfo}
-    mkdir -pv ${MYINIT}/usr/{,local/}share/man/man{1,2,3,4,5,6,7,8}
-    for dir in ${MYINIT}/usr{,/local}; do
-	ln -sv share/{man,doc,info} ${dir}
-    done
+export MYINIT=initfs
+```
+
+Now, we set up the overall directory structure along with establishing root user
+```
+## set up directory structure for the initramfs
+mkdir -pv ${MYINIT}
+mkdir -pv ${MYINIT}/{bin,boot,dev,etcopt,home,lib/{firmware,modules},lib64,mnt}
+mkdir -pv ${MYINIT}/{proc,media/{floppy},sbin,srv,sys}
+mkdir -pv ${MYINIT}/var/{cache,lock,log,run,lib}
+install -dv -m 0750 ${MYINIT}/root
+install -dv -m 1777 ${MYINIT}{/var,}/tmp
+mkdir -pv ${MYINIT}/usr/{,local/}{bin,lib{,64},sbin}
+mkdir -pv ${MYINIT}/usr/{,local/}share/man
+    
+## set up root user info
+cat > ${MYINIT}/etc/passwd <<EOF
+root::0:0:root:/root:/bin/ash
+EOF
+
+cat > ${MYINIT}/etc/group <<EOF
+root:x:0:
+bin:x:1:
+sys:x:2:
+kmem:x:3:
+tty:x:4:
+daemon:x:6:
+disk:x:8:
+dialout:x:10:
+video:x:12:
+utmp:x:13:
+usb:x:14:
+EOF
+
+## bash profile to get the environments set up correctly
+cat > ${MYINIT}/etc/profile <<EOF
+# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
+# and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
+if [ "`id -u`" -eq 0 ]; then
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+else
+  PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+fi
+export PATH
+if [ "${PS1-}" ]; then
+  if [ "${BASH-}" ] && [ "$BASH" != "/bin/sh" ]; then
+    # The file bash.bashrc already sets the default PS1.
+    # PS1='\h:\w\$ '
+    if [ -f /etc/bash.bashrc ]; then
+      . /etc/bash.bashrc
+    fi
+  else
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='# '
+    else
+      PS1='$ '
+    fi
+  fi
+fi
+if [ -d /etc/profile.d ]; then
+  for i in /etc/profile.d/*.sh; do
+    if [ -r $i ]; then
+      . $i
+    fi
+  done
+  unset i
+fi
+EOF
 ```
 
 ## External Resources
