@@ -162,13 +162,43 @@ The */init* created above is the first script is run to set up various Linux sub
 ## From /init file above, we see that the following programs will be needed: bash, mount, echo, mkdir, ln, poweroff
 
 ## figure out where binary lives
-ubuntu:~$ which bash
+ubuntu:~$ export MYBIN=bash
+ubuntu:~$ which $MYBIN
 /usr/bin/bash
-ubuntu:~$ which bash | xargs -I '{}' dirname '{}'
+ubuntu:~$ which $MYBIN | xargs -I '{}' dirname '{}'
 /usr/bin
 
+## get full path
+export MYBIN_LOC=$(which $MYBIN)
+
 ## copy bash to correct directory in initramfs
-ubuntu:~$ cp /usr/bin/bash ${MYINIT}/usr/bin/
+ubuntu:~$ cp $MYBIN_LOC ${MYINIT}/usr/bin/
+
+## ldd can tell us the system libraries the binary depends upon
+ubuntu:~$ ldd $MYBIN_LOC
+	linux-vdso.so.1 (0x00007fff1a188000)
+	libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007fb088faa000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb088fa4000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb088db2000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fb089119000)
+
+## Basically, we have to make sure we copy the correct libraries at the correct location in the new initramfs
+## We can ignore linux-vdso.so.1 as the kernel provides it automatically: https://man7.org/linux/man-pages/man7/vdso.7.html.
+
+## simple scripting to get the necessary libraries
+ubuntu:~$ ldd $MYBIN_LOC | grep "ld-linux" | awk '{print $1}'
+/lib64/ld-linux-x86-64.so.2
+
+ubuntu:~$ ldd $MYBIN_LOC | grep "=> /" | awk '{print $3}'
+/lib/x86_64-linux-gnu/libtinfo.so.6
+/lib/x86_64-linux-gnu/libdl.so.2
+/lib/x86_64-linux-gnu/libc.so.6
+
+## copy the libraries that bash depend on
+ubuntu:~$ cp /lib64/ld-linux-x86-64.so.2 ${MYINIT}/lib64/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libtinfo.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libdl.so.2 ${MYINIT}/lib/x86_64-linux-gnu/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libc.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
 
 ```
 
