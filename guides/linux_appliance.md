@@ -10,7 +10,7 @@ Furthermore in a recent paper published in SOSP'19: "An Analysis of Performance 
 Beyond these, another side benefit of a custom Linux appliance is that the root filesystem is loaded as a RAM disk by default; which is another positive for researchers who want to minimize system noise from disk paging as all executables are now run out from memory. Obviously, other considerations are needed should the experiments require data from a external storage device.
 
 ## Goals
-There are many tutorials online to build your own Linux kernel and initramfs, however, their usecases are typically too general and the steps involved can be quite complex. This tutorial will demonstrate that it is infact surprsingly easy to get a barebones Linux up and running that is ready to execute some simple binaries. The tutorial will cover the specific use-case of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. 
+There are many tutorials online to build your own Linux kernel and initramfs, however, their usecases are typically too general and the steps involved can be quite complex. This tutorial will demonstrate that it is infact surprsingly easy to get a barebones Linux up and running that is ready to execute some simple binaries. The tutorial will cover the specific use-cases of how to build Linux appliances, how to boot them, and how this can help enable experimental automation, with a focus on performance and system stability. 
 
 Concretely, here are the following steps in this tutorial towards this goal:
 
@@ -23,7 +23,7 @@ Concretely, here are the following steps in this tutorial towards this goal:
 7. Booting via PXEBOOT protocol in a local network
 
 ## Preparation
-Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary is runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries of the OS to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the exiting OS to ensure system library compatibility. 
+Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary you intend to run is infact runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries of the OS to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the existing OS to ensure system library compatibility. 
 
 ## Steps to create an initramfs
 
@@ -64,6 +64,7 @@ usb:x:14:
 EOF
 
 ## bash profile to get the environments set up correctly
+## https://bencane.com/2013/09/16/understanding-a-little-more-about-etcprofile-and-etcbashrc/
 cat > ${MYINIT}/etc/profile <<EOF
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
 # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
@@ -99,7 +100,7 @@ fi
 EOF
 ```
 
-Now, we create the very important */init* file which will be used to eventually drive experiments
+Now, we create the very important `/init` file which will be used to eventually drive experiments
 ```
  ## create an ini file (note: not using systemd)
 cat > ${MYINIT}/init <<EOF
@@ -155,8 +156,10 @@ cd ${MYINIT}
 find . | cpio -o -H newc > ../${MYINIT}.cpio
 ```
 
-## Getting binaries to run
-The */init* created above is the first script is run to set up various Linux subsystems. Examining it, one can see that #!/bin/bash is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
+## Getting simple Unix binaries to run
+The `/init` created above is the first script is run to set up various Linux subsystems. Examining it, one can see that `#!/bin/bash` is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
+
+For other binaries you intend to run, you'll want to build the binary statically in order to eliminate potential external library loading costs, however, should that be too troublesome, then the same steps below will be applied there too.
 
 ```
 ## From /init file above, we see that the following programs will be needed: bash, mount, echo, mkdir, ln, poweroff
