@@ -36,7 +36,7 @@ Now, we set up the overall directory structure along with establishing root user
 ```
 ## set up directory structure for the initramfs
 mkdir -pv ${MYINIT}
-mkdir -pv ${MYINIT}/{bin,boot,dev,etcopt,home,lib/{firmware,modules},lib64,mnt}
+mkdir -pv ${MYINIT}/{bin,boot,dev,etc,opt,home,lib/{firmware,modules},lib64,mnt}
 mkdir -pv ${MYINIT}/{proc,media/{floppy},sbin,srv,sys}
 mkdir -pv ${MYINIT}/var/{cache,lock,log,run,lib}
 install -dv -m 0750 ${MYINIT}/root
