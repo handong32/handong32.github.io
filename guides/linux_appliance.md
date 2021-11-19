@@ -23,9 +23,10 @@ Concretely, here are the following steps in this tutorial towards this goal:
 7. Booting via PXEBOOT protocol in a local network
 
 ## Preparation
-Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary you intend to run is infact runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries of the OS to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the existing OS to ensure system library compatibility. 
+Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary you intend to run is infact runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries in order to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the existing OS to ensure system library compatibility. 
 
 ## Steps to create an initramfs
+The steps below are mainly draw from the work done by https://www.linuxfromscratch.org, though we will be skipping all the requirements to get cross compilers running and get binaries to run by copying over needed system libraries from the existing kernel. 
 
 First, create a name for your initramfs file
 ```
