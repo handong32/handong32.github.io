@@ -86,6 +86,8 @@ ln -sfv $LFS/run/lock $LFS/var/lock
 
 install -dv -m 0750 $LFS/root
 install -dv -m 1777 $LFS/tmp $LFS/var/tmp
+
+ln -sv $LFS/proc/self/mounts $LFS/etc/mtab
 ```
 
 Now, we create the very important `/init` file which will be used to eventually drive experiments
