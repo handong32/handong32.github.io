@@ -31,7 +31,9 @@ The steps below are mainly draw from the work done by https://www.linuxfromscrat
 ### 1. Setup working environment
 Open up a terminal and log in to the `root` user by running `sudo -s`. Next, export the name for the initramfs for where you will be creating the directory by running `export LFS=~/initfs`. Check that it has been setup correctly by running `echo $LFS`. You might also want to put the `export LFS=~/initfs` command into the `.bashrc` file of the `root` user so that it gets set automatically.
 
-### 2. Create overall directory structure
+### 2. Create directory structure for `$LFS`
+
+These directories are typically where default system libraries are placed: (https://www.linuxfromscratch.org/lfs/view/stable/chapter04/creatingminlayout.html)
 ```
 mkdir -pv $LFS
 mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
@@ -43,7 +45,25 @@ done
 case $(uname -m) in
   x86_64) mkdir -pv $LFS/lib64 ;;
 esac
+```
 
+Setup virtual kernel filesystems (https://www.linuxfromscratch.org/lfs/view/stable/chapter07/kernfs.html)
+```
+mkdir -pv $LFS/{dev,proc,sys,run}
+
+mknod -m 600 $LFS/dev/console c 5 1
+mknod -m 666 $LFS/dev/null c 1 3
+
+mount -v --bind /dev $LFS/dev
+
+mount -v --bind /dev/pts $LFS/dev/pts
+mount -vt proc proc $LFS/proc
+mount -vt sysfs sysfs $LFS/sys
+mount -vt tmpfs tmpfs $LFS/run
+
+if [ -h $LFS/dev/shm ]; then
+  mkdir -pv $LFS/$(readlink $LFS/dev/shm)
+fi
 ```
 
 Now, we create the very important `/init` file which will be used to eventually drive experiments
