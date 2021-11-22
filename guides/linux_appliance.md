@@ -33,7 +33,7 @@ Open up a terminal and log in to the `root` user by running `sudo -s`. Next, exp
 
 ### 2. Create directory structure for `$LFS`
 
-These directories are typically where default system libraries are placed: (https://www.linuxfromscratch.org/lfs/view/stable/chapter04/creatingminlayout.html)
+These directories are typically where default system libraries are placed, details are found at [here](https://www.linuxfromscratch.org/lfs/view/stable/chapter04/creatingminlayout.html).
 ```
 mkdir -pv $LFS
 mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
@@ -47,7 +47,7 @@ case $(uname -m) in
 esac
 ```
 
-Setup virtual kernel filesystems (https://www.linuxfromscratch.org/lfs/view/stable/chapter07/kernfs.html)
+Setup virtual kernel filesystems -- which are used to typically communicate with the kernel, details are found [here](https://www.linuxfromscratch.org/lfs/view/stable/chapter07/kernfs.html). **Note:** Remember to umount.
 ```
 mkdir -pv $LFS/{dev,proc,sys,run}
 
