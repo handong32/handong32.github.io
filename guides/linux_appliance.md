@@ -14,7 +14,7 @@ There are many tutorials online to build your own Linux kernel and initramfs, ho
 
 Concretely, here are the following steps in this tutorial towards this goal:
 
-1. Create an initial initramfs
+1. Steps to create an initramfs
 2. Build a basic Linux kernel
 3. How to get simple binaries to run
 4. How to boot appliance via GRUB
@@ -23,82 +23,27 @@ Concretely, here are the following steps in this tutorial towards this goal:
 7. Booting via PXEBOOT protocol in a local network
 
 ## Preparation
-Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary you intend to run is infact runnable and it can also be used to install additional packages that you may need. Further, we will be relying on the existing system libraries in order to get basic Unix utilities such as Bash working. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the existing OS to ensure system library compatibility. 
+Before we embark on this journey, here's a general breakdown of what is required on your end. First, you should have a testing computer that you will be booting the Linux appliance on and you should have an existing Linux flavor already installed on the computer, this can be Ubuntu, Fedora, etc. Having a pre-existing OS on your testing machine is important because you want to make sure you are in a state where the binary you intend to run is infact runnable and it can also be used to install additional packages that you may need. The implication here is also that the kernel used for the Linux appliance should be simiarly versioned as the existing OS to ensure system library compatibility, details of this will be covered in the Linux kernel section below.
 
 ## Steps to create an initramfs
-The steps below are mainly draw from the work done by https://www.linuxfromscratch.org, though we will be skipping all the requirements to get cross compilers running and get binaries to run by copying over needed system libraries from the existing kernel. 
+The steps below are mainly draw from the work done by https://www.linuxfromscratch.org/lfs/view/stable/. We will be skipping all the steps to get the cross compilers and systems packages installed and running, instead, this tutorial demonstrates how binaries can be made runnable simply by copying over needed system libraries from the already installed OS. 
 
-First, create a name for your initramfs file
+### 1. Setup working environment
+Open up a terminal and log in to the `root` user by running `sudo -s`. Next, export the name for the initramfs for where you will be creating the directory by running `export LFS=~/initfs`. Check that it has been setup correctly by running `echo $LFS`. You might also want to put the `export LFS=~/initfs` command into the `.bashrc` file of the `root` user so that it gets set automatically.
+
+### 2. Create overall directory structure
 ```
-export MYINIT=initfs
-```
+mkdir -pv $LFS
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
 
-Now, we set up the overall directory structure along with establishing root user
-```
-## set up directory structure for the initramfs
-mkdir -pv ${MYINIT}
-mkdir -pv ${MYINIT}/{bin,boot,dev,etc,opt,home,lib/{firmware,modules},lib64,mnt}
-mkdir -pv ${MYINIT}/{proc,media/{floppy},sbin,srv,sys}
-mkdir -pv ${MYINIT}/var/{cache,lock,log,run,lib}
-install -dv -m 0750 ${MYINIT}/root
-install -dv -m 1777 ${MYINIT}{/var,}/tmp
-mkdir -pv ${MYINIT}/usr/{,local/}{bin,lib{,64},sbin}
-mkdir -pv ${MYINIT}/usr/{,local/}share/man
-    
-## set up root user info
-cat > ${MYINIT}/etc/passwd <<EOF
-root::0:0:root:/root:/bin/ash
-EOF
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
 
-cat > ${MYINIT}/etc/group <<EOF
-root:x:0:
-bin:x:1:
-sys:x:2:
-kmem:x:3:
-tty:x:4:
-daemon:x:6:
-disk:x:8:
-dialout:x:10:
-video:x:12:
-utmp:x:13:
-usb:x:14:
-EOF
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
 
-## bash profile to get the environments set up correctly
-## https://bencane.com/2013/09/16/understanding-a-little-more-about-etcprofile-and-etcbashrc/
-cat > ${MYINIT}/etc/profile <<EOF
-# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
-# and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
-if [ "`id -u`" -eq 0 ]; then
-  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-else
-  PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-fi
-export PATH
-if [ "${PS1-}" ]; then
-  if [ "${BASH-}" ] && [ "$BASH" != "/bin/sh" ]; then
-    # The file bash.bashrc already sets the default PS1.
-    # PS1='\h:\w\$ '
-    if [ -f /etc/bash.bashrc ]; then
-      . /etc/bash.bashrc
-    fi
-  else
-    if [ "`id -u`" -eq 0 ]; then
-      PS1='# '
-    else
-      PS1='$ '
-    fi
-  fi
-fi
-if [ -d /etc/profile.d ]; then
-  for i in /etc/profile.d/*.sh; do
-    if [ -r $i ]; then
-      . $i
-    fi
-  done
-  unset i
-fi
-EOF
 ```
 
 Now, we create the very important `/init` file which will be used to eventually drive experiments
@@ -205,8 +150,6 @@ ubuntu:~$ cp /lib/x86_64-linux-gnu/libdl.so.2 ${MYINIT}/lib/x86_64-linux-gnu/
 ubuntu:~$ cp /lib/x86_64-linux-gnu/libc.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
 
 ```
-
-
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 * https://wiki.debian.org/initramfs/
