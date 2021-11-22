@@ -159,6 +159,98 @@ users:x:999:
 EOF
 ```
 
+## Getting binaries to run
+
+After you've created the directory structure above, the `chroot` program can then be used to test out `$LFS` filesystem. However, as the filesystem itself is *bare* without any binaries in it, we see the following error when running `chroot`:
+```
+[root@ ~]# chroot $LFS
+chroot: failed to run command ‘/bin/bash’: No such file or directory
+```
+
+### Getting `/bin/bash` to run 
+
+To get `chroot` working, we need to copy over the `/bin/bash` binary to `$LFS/bin/`:
+```
+## figure out where binary lives
+[root@ ~]# which bash
+/usr/bin/bash
+
+## copy bash to correct directory in $LFS
+ubuntu:~$ cp /usr/bin/bash $LFS/usr/bin/
+```
+
+Now we figure out the library dependencies and copy them over as well:
+```
+## ldd can tell us the system libraries that bash depends upon
+[root@ ~]# ldd /usr/bin/bash
+	linux-vdso.so.1 (0x00007ffd6ffa6000)
+	libtinfo.so.6 => /lib64/libtinfo.so.6 (0x00007f8e3751b000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007f8e37514000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007f8e37345000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f8e376bc000)
+
+## Basically, we have to make sure we copy the correct libraries to the correct location in the new initramfs
+## We can ignore linux-vdso.so.1 as the kernel provides it automatically: https://man7.org/linux/man-pages/man7/vdso.7.html.
+[root@ ~]# cp /lib64/libtinfo.so.6 $LFS/lib64/
+[root@ ~]# cp /lib64/libdl.so.2 $LFS/lib64/
+[root@ ~]# cp /lib64/libc.so.6 $LFS/lib64/
+[root@ ~]# cp /lib64/ld-linux-x86-64.so.2 $LFS/lib64/
+
+```
+After the steps above, running `chroot $LFS` should now show the following:
+```
+[root@sloth ~]# chroot $LFS
+bash-5.1# 
+```
+
+### Getting all binaries to run
+
+
+```
+ubuntu:~$ export MYBIN=bash
+ubuntu:~$ which $MYBIN
+/usr/bin/bash
+ubuntu:~$ which $MYBIN | xargs -I '{}' dirname '{}'
+/usr/bin
+
+## get full path
+export MYBIN_LOC=$(which $MYBIN)
+
+## copy bash to correct directory in initramfs
+ubuntu:~$ cp $MYBIN_LOC ${MYINIT}/usr/bin/
+
+## ldd can tell us the system libraries the binary depends upon
+ubuntu:~$ ldd $MYBIN_LOC
+	linux-vdso.so.1 (0x00007fff1a188000)
+	libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007fb088faa000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb088fa4000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb088db2000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fb089119000)
+
+## Basically, we have to make sure we copy the correct libraries at the correct location in the new initramfs
+## We can ignore linux-vdso.so.1 as the kernel provides it automatically: https://man7.org/linux/man-pages/man7/vdso.7.html.
+
+## simple scripting to get the necessary libraries
+ubuntu:~$ ldd $MYBIN_LOC | grep "ld-linux" | awk '{print $1}'
+/lib64/ld-linux-x86-64.so.2
+
+ubuntu:~$ ldd $MYBIN_LOC | grep "=> /" | awk '{print $3}'
+/lib/x86_64-linux-gnu/libtinfo.so.6
+/lib/x86_64-linux-gnu/libdl.so.2
+/lib/x86_64-linux-gnu/libc.so.6
+
+## copy the libraries that bash depend on
+ubuntu:~$ cp /lib64/ld-linux-x86-64.so.2 ${MYINIT}/lib64/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libtinfo.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libdl.so.2 ${MYINIT}/lib/x86_64-linux-gnu/
+ubuntu:~$ cp /lib/x86_64-linux-gnu/libc.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
+
+```
+
+The `/init` created above is the first script is run to set up various Linux subsystems. Examining it, one can see that `#!/bin/bash` is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
+
+For other binaries you intend to run, you'll want to build the binary statically in order to eliminate potential external library loading costs, however, should that be too troublesome, then the same steps below will be applied there too.
+
 Now, we create the very important `/init` file which will be used to eventually drive experiments
 ```
  ## create an ini file (note: not using systemd)
@@ -215,54 +307,7 @@ cd ${MYINIT}
 find . | cpio -o -H newc > ../${MYINIT}.cpio
 ```
 
-## Getting simple Unix binaries to run
-The `/init` created above is the first script is run to set up various Linux subsystems. Examining it, one can see that `#!/bin/bash` is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
 
-For other binaries you intend to run, you'll want to build the binary statically in order to eliminate potential external library loading costs, however, should that be too troublesome, then the same steps below will be applied there too.
-
-```
-## From /init file above, we see that the following programs will be needed: bash, mount, echo, mkdir, ln, poweroff
-
-## figure out where binary lives
-ubuntu:~$ export MYBIN=bash
-ubuntu:~$ which $MYBIN
-/usr/bin/bash
-ubuntu:~$ which $MYBIN | xargs -I '{}' dirname '{}'
-/usr/bin
-
-## get full path
-export MYBIN_LOC=$(which $MYBIN)
-
-## copy bash to correct directory in initramfs
-ubuntu:~$ cp $MYBIN_LOC ${MYINIT}/usr/bin/
-
-## ldd can tell us the system libraries the binary depends upon
-ubuntu:~$ ldd $MYBIN_LOC
-	linux-vdso.so.1 (0x00007fff1a188000)
-	libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007fb088faa000)
-	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb088fa4000)
-	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb088db2000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fb089119000)
-
-## Basically, we have to make sure we copy the correct libraries at the correct location in the new initramfs
-## We can ignore linux-vdso.so.1 as the kernel provides it automatically: https://man7.org/linux/man-pages/man7/vdso.7.html.
-
-## simple scripting to get the necessary libraries
-ubuntu:~$ ldd $MYBIN_LOC | grep "ld-linux" | awk '{print $1}'
-/lib64/ld-linux-x86-64.so.2
-
-ubuntu:~$ ldd $MYBIN_LOC | grep "=> /" | awk '{print $3}'
-/lib/x86_64-linux-gnu/libtinfo.so.6
-/lib/x86_64-linux-gnu/libdl.so.2
-/lib/x86_64-linux-gnu/libc.so.6
-
-## copy the libraries that bash depend on
-ubuntu:~$ cp /lib64/ld-linux-x86-64.so.2 ${MYINIT}/lib64/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libtinfo.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libdl.so.2 ${MYINIT}/lib/x86_64-linux-gnu/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libc.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
-
-```
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 * https://wiki.debian.org/initramfs/
