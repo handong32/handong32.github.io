@@ -66,6 +66,28 @@ if [ -h $LFS/dev/shm ]; then
 fi
 ```
 
+Create the rest of the directories needed, details [here](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/creatingdirs.html).
+```
+mkdir -pv $LFS/{boot,home,mnt,opt,srv}
+
+mkdir -pv $LFS/etc/{opt,sysconfig}
+mkdir -pv $LFS/lib/firmware
+mkdir -pv $LFS/media/{floppy,cdrom}
+mkdir -pv $LFS/usr/{,local/}{include,src}
+mkdir -pv $LFS/usr/local/{bin,lib,sbin}
+mkdir -pv $LFS/usr/{,local/}share/{color,dict,doc,info,locale,man}
+mkdir -pv $LFS/usr/{,local/}share/{misc,terminfo,zoneinfo}
+mkdir -pv $LFS/usr/{,local/}share/man/man{1..8}
+mkdir -pv $LFS/var/{cache,local,log,mail,opt,spool}
+mkdir -pv $LFS/var/lib/{color,misc,locate}
+
+ln -sfv $LFS/run $LFS/var/run
+ln -sfv $LFS/run/lock $LFS/var/lock
+
+install -dv -m 0750 $LFS/root
+install -dv -m 1777 $LFS/tmp $LFS/var/tmp
+```
+
 Now, we create the very important `/init` file which will be used to eventually drive experiments
 ```
  ## create an ini file (note: not using systemd)
