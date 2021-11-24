@@ -204,7 +204,7 @@ bash-5.1#
 ```
 
 ### Getting other programs to run
-However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the entire process. Example usage: `MYINIT=$LFS BINS="ls echo env nproc ln mkdir mknod mount pwd grep umount cat head tail wc ps ip lsblk lspci lsmod poweroff reboot df du dh" ./copy_bin_libs`
+However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the entire process. Example usage: `MYINIT=$LFS BINS="ls echo env nproc ln mkdir mknod mount pwd grep umount cat head tail wc ps ip lsblk lspci lsmod poweroff reboot df du" ./copy_bin_libs`
 
 ```
 [root@ ~]# cat copy_bin_libs
