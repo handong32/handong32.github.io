@@ -197,14 +197,54 @@ Now we figure out the library dependencies and copy them over as well:
 [root@ ~]# cp /lib64/ld-linux-x86-64.so.2 $LFS/lib64/
 
 ```
-After the steps above, running `chroot $LFS` should now show the following:
+After the steps above, running `chroot $LFS`, you should be greeted with a bash prompt. 
 ```
-[root@sloth ~]# chroot $LFS
+[root@ ~]# chroot $LFS
 bash-5.1# 
 ```
 
-### Getting all binaries to run
+### Getting other programs to run
+However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the process.
 
+```
+[root@ ~]# cat copy_bin_libs
+#!/bin/bash
+
+export MYINIT=${MYINIT:=''}
+export BINS=${BINS:=''}
+
+## all we do is copy the files into the proper directory in the initrd
+for bins in ${BINS}; do
+
+    echo $bins
+    ## figure out where binary lives
+    bins_loc=$(which $bins)
+    bins_dir_loc=$(which $bins | xargs -I '{}' dirname '{}')    
+
+    echo $bins_loc
+    echo $bins_dir_loc
+    
+    ## set up directory tree and copy bins here
+    mkdir -p "./${MYINIT}/${bins_dir_loc}"
+    cp $bins_loc "./${MYINIT}/${bins_dir_loc}"
+    
+    ## figure out library dependencies of $bins
+    libs_loc=$(ldd $bins_loc | grep "=> /" | awk '{print $3}')
+
+    ## set up directory tree and copy libs here
+    for libs in ${libs_loc}; do
+	libs_dir=$(dirname $libs)
+	
+	echo $libs
+	echo $libs_dir
+	
+	mkdir -p "./${MYINIT}/${libs_dir}"
+	cp $libs "./${MYINIT}/${libs_dir}"
+    done
+    echo "+++++++++++++"
+done
+
+```
 
 ```
 ubuntu:~$ export MYBIN=bash
