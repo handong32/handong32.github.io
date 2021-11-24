@@ -167,7 +167,7 @@ After you've created the directory structure above, the `chroot` program can the
 chroot: failed to run command ‘/bin/bash’: No such file or directory
 ```
 
-### Getting `/bin/bash` to run 
+### 1. Getting `/bin/bash` to run 
 
 To get `chroot` working, we need to copy over the `/bin/bash` binary to `$LFS/bin/`:
 ```
@@ -203,11 +203,11 @@ After the steps above, running `chroot $LFS`, you should be greeted with a bash 
 bash-5.1# 
 ```
 
-### Getting other programs to run
+### 2. Getting other programs to run
 However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the entire process. Example usage: `MYINIT=$LFS BINS="ls echo env nproc ln mkdir mknod mount pwd grep umount cat head tail wc ps ip lsblk lspci lsmod poweroff reboot df du" ./copy_bin_libs`
 
+`copy_bin_libs`:
 ```
-[root@ ~]# cat copy_bin_libs
 #!/bin/bash
 
 export MYINIT=${MYINIT:=''}
@@ -245,14 +245,11 @@ for bins in ${BINS}; do
 done
 ```
 
-The `/init` created above is the first script is run to set up various Linux subsystems. Examining it, one can see that `#!/bin/bash` is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
+## Create startup script for Linux
+After following the previous steps to ensure a basic set of programs are runnable in your appliance, the next step is to create the startup file that is essentially `PID=1`, the program that Linux runs to initiate the rest of the system. Modern systems have typically migrated to use [systemd](https://systemd.io/) as the bootstrapping program due to its comprehensive set of tools. However, we will instead use the older [`init`](https://en.wikipedia.org/wiki/Init) script as it is simpler to edit and enables greater control to automate experiments. Run the steps below to create a simple `init` file that sets up a standard Linux filesystem on the booted system:
 
-For other binaries you intend to run, you'll want to build the binary statically in order to eliminate potential external library loading costs, however, should that be too troublesome, then the same steps below will be applied there too.
-
-Now, we create the very important `/init` file which will be used to eventually drive experiments
 ```
- ## create an ini file (note: not using systemd)
-cat > ${MYINIT}/init <<EOF
+cat > $LFS/init <<EOF
 #!/bin/bash
 
 set -x
@@ -291,19 +288,10 @@ ln -sf /proc/mounts /etc/mtab
 
 # if bash fails, shuts off machine
 poweroff -f
-
 EOF
-
-## set permissions for init
-chmod 755 ${MYINIT}/init
 ```
 
-Next, we will compress the initramfs into a cpio format
-```
-## make sure you are inside the $MYINIT directory
-cd ${MYINIT}
-find . | cpio -o -H newc > ../${MYINIT}.cpio
-```
+Set permissions: `chmod 755 $LFS/init`. Next, `cd $LFS` to be inside the `$LFS` directory and compress the initramfs into a cpio format by running `find . | cpio -o -H newc > ../myinitfs.cpio`
 
 
 ## External Resources
