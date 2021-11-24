@@ -204,7 +204,7 @@ bash-5.1#
 ```
 
 ### Getting other programs to run
-However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the process.
+However, in order to run other programs we will also need to follow the same steps above. For that purpose, below is a simple script `copy_bin_libs` to automate the entire process. Example usage: `MYINIT=$LFS BINS="ls echo env nproc ln mkdir mknod mount pwd grep umount cat head tail wc ps ip lsblk lspci lsmod poweroff reboot df du dh" ./copy_bin_libs`
 
 ```
 [root@ ~]# cat copy_bin_libs
@@ -225,8 +225,8 @@ for bins in ${BINS}; do
     echo $bins_dir_loc
     
     ## set up directory tree and copy bins here
-    mkdir -p "./${MYINIT}/${bins_dir_loc}"
-    cp $bins_loc "./${MYINIT}/${bins_dir_loc}"
+    mkdir -p "${MYINIT}/${bins_dir_loc}"
+    cp $bins_loc "${MYINIT}/${bins_dir_loc}"
     
     ## figure out library dependencies of $bins
     libs_loc=$(ldd $bins_loc | grep "=> /" | awk '{print $3}')
@@ -238,53 +238,11 @@ for bins in ${BINS}; do
 	echo $libs
 	echo $libs_dir
 	
-	mkdir -p "./${MYINIT}/${libs_dir}"
-	cp $libs "./${MYINIT}/${libs_dir}"
+	mkdir -p "${MYINIT}/${libs_dir}"
+	cp $libs "${MYINIT}/${libs_dir}"
     done
     echo "+++++++++++++"
 done
-
-```
-
-```
-ubuntu:~$ export MYBIN=bash
-ubuntu:~$ which $MYBIN
-/usr/bin/bash
-ubuntu:~$ which $MYBIN | xargs -I '{}' dirname '{}'
-/usr/bin
-
-## get full path
-export MYBIN_LOC=$(which $MYBIN)
-
-## copy bash to correct directory in initramfs
-ubuntu:~$ cp $MYBIN_LOC ${MYINIT}/usr/bin/
-
-## ldd can tell us the system libraries the binary depends upon
-ubuntu:~$ ldd $MYBIN_LOC
-	linux-vdso.so.1 (0x00007fff1a188000)
-	libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007fb088faa000)
-	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb088fa4000)
-	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb088db2000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fb089119000)
-
-## Basically, we have to make sure we copy the correct libraries at the correct location in the new initramfs
-## We can ignore linux-vdso.so.1 as the kernel provides it automatically: https://man7.org/linux/man-pages/man7/vdso.7.html.
-
-## simple scripting to get the necessary libraries
-ubuntu:~$ ldd $MYBIN_LOC | grep "ld-linux" | awk '{print $1}'
-/lib64/ld-linux-x86-64.so.2
-
-ubuntu:~$ ldd $MYBIN_LOC | grep "=> /" | awk '{print $3}'
-/lib/x86_64-linux-gnu/libtinfo.so.6
-/lib/x86_64-linux-gnu/libdl.so.2
-/lib/x86_64-linux-gnu/libc.so.6
-
-## copy the libraries that bash depend on
-ubuntu:~$ cp /lib64/ld-linux-x86-64.so.2 ${MYINIT}/lib64/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libtinfo.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libdl.so.2 ${MYINIT}/lib/x86_64-linux-gnu/
-ubuntu:~$ cp /lib/x86_64-linux-gnu/libc.so.6 ${MYINIT}/lib/x86_64-linux-gnu/
-
 ```
 
 The `/init` created above is the first script is run to set up various Linux subsystems. Examining it, one can see that `#!/bin/bash` is the first program that is called, which provides an environment to run a basic shell. I will show an example of how to copy some utility binaries and its dependent libraries into the correct folders. The steps shown below will be completely manual but it can also be completely scriptable as well, however, that will be outside the scope of this tutorial.
