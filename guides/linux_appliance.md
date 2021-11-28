@@ -309,6 +309,9 @@ menuentry 'linux_appiance' --class ubuntu --class gnu-linux --class gnu --class 
 ```
 After modifying this file, you need to then update GRUB. On Ubuntu this is achieved by running `update-grub` and on Fedora the `grub2-mkconfig` command is used instead.
 
+## Booting the appliance via PXE
+While booting with GRUB enables a quick way to test the appliance, the [PXE](https://docs.fedoraproject.org/en-US/fedora/rawhide/install-guide/advanced/Network_based_Installations/) protocol is preferable for experimentation as it allows a single master node to coordinate and boot multiple servers in a more programmed fashion. First, you'll need to install the packages for `dhcp` and `tftp`. 
+
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 * https://wiki.debian.org/initramfs/
