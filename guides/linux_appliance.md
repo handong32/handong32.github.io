@@ -310,7 +310,12 @@ menuentry 'linux_appiance' --class ubuntu --class gnu-linux --class gnu --class 
 After modifying this file, you need to then update GRUB. On Ubuntu this is achieved by running `update-grub` and on Fedora the `grub2-mkconfig` command is used instead.
 
 ## Booting the appliance via PXE
-While booting with GRUB enables a quick way to test the appliance, the [PXE](https://docs.fedoraproject.org/en-US/fedora/rawhide/install-guide/advanced/Network_based_Installations/) protocol is preferable for experimentation as it allows a single master node to coordinate and boot multiple servers in a more programmed fashion. First, you'll need to install the packages for `dhcp` and `tftp`. 
+While booting with GRUB enables a quick way to test the appliance, the [PXE](https://docs.fedoraproject.org/en-US/fedora/rawhide/install-guide/advanced/Network_based_Installations/) protocol is preferable for setting up experiments as it allows a single master node to coordinate and boot multiple servers in a more programmed fashion. This booting process is also useful should you have a cluster of nodes connected through a local network and need to run some multi-node experiments such as webservers, databases, etc.
+
+To test this setup, you'll need two machines and an ethernet connection between them. The client machine is used to setup the PXE booting infrastructure and will serve the necessary files to boot the Linux appliance on the server machine. On the server machine, you'll need to go into its BIOS setup and enable booting via the ethernet device and once this is enabled, it will automatically initiate PXE protocol communication with the client machine upon a restart. 
+
+### Client machine setup
+First, you'll need to install the packages for `dhcp` and `tftp`. The `dhcp` service is needed to assign an initial IP address to the 
 
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
