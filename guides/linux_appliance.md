@@ -293,6 +293,21 @@ EOF
 
 Set permissions: `chmod 755 $LFS/init`. Next, `cd $LFS` to be inside the `$LFS` directory and compress the initramfs into a cpio format by running `find . | cpio -o -H newc > ../myinitfs.cpio`
 
+## Booting the appliance
+On your testing machine, we will be adding a custom menu option to GRUB to select the Linux appliance as a bootable option. External resources can be found for [Ubuntu](https://help.ubuntu.com/community/Grub2/CustomMenus) and [Fedora](https://docs.fedoraproject.org/en-US/Fedora/24/html/System_Administrators_Guide/sec-Using_only_a_Custom_Menu.html). In both cases, we modify the file at `/etc/grub.d/40_custom` and add a `menuentry` option for the specific Linux image and initrd. The example below shows the Linux bzImage that we built above along with the `myinitfs.cpio` that we created above.
+
+```
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+menuentry 'linux_appiance' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'linux_appiance' {
+    linux	/boot/bzImage root=/dev/ram0 rw
+    initrd	/boot/tmpfs.cpio
+}
+```
+After modifying this file, you need to then update GRUB. On Ubuntu this is achieved by running `update-grub` and on Fedora the `grub2-mkconfig` command is used instead.
 
 ## External Resources
 * https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
