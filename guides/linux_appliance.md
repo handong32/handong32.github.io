@@ -293,6 +293,10 @@ EOF
 
 Set permissions: `chmod 755 $LFS/init`. Next, `cd $LFS` to be inside the `$LFS` directory and compress the initramfs into a cpio format by running `find . | cpio -o -H newc > ../myinitfs.cpio`
 
+## Building a basic Linux kernel
+First, you should make sure you have the necessary packages installed to build a Linux kernel from source. You could potentially take the existing image at `/boot/vmlinuz-*` and just try booting that and it will mostly work, though, building from source enables greater control over its configuration setup.
+
+
 ## Booting the appliance
 On your testing machine, we will be adding a custom menu option to GRUB to select the Linux appliance as a bootable option. External resources can be found for [Ubuntu](https://help.ubuntu.com/community/Grub2/CustomMenus) and [Fedora](https://docs.fedoraproject.org/en-US/Fedora/24/html/System_Administrators_Guide/sec-Using_only_a_Custom_Menu.html). In both cases, we modify the file at `/etc/grub.d/40_custom` and add a `menuentry` option for the specific Linux image and initrd. The example below shows the Linux bzImage that we built above along with the `myinitfs.cpio` that we created above.
 
@@ -307,7 +311,7 @@ menuentry 'linux_appiance' --class ubuntu --class gnu-linux --class gnu --class 
     initrd	/boot/tmpfs.cpio
 }
 ```
-After modifying this file, you need to then update GRUB. On Ubuntu this is achieved by running `update-grub` and on Fedora the `grub2-mkconfig` command is used instead.
+After modifying this file, remember to then update GRUB.
 
 ## Booting the appliance via PXE
 While booting with GRUB enables a quick way to test the appliance, the [PXE](https://docs.fedoraproject.org/en-US/fedora/rawhide/install-guide/advanced/Network_based_Installations/) protocol is preferable for setting up experiments as it allows a single master node to coordinate and boot multiple servers in a more programmed fashion. This booting process is also useful should you have a cluster of nodes connected through a local network and need to run some multi-node experiments such as webservers, databases, etc.
