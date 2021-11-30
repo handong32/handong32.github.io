@@ -1,0 +1,35 @@
+#!/bin/bash
+
+export MYINIT=${MYINIT:=''}
+export BINS=${BINS:=''}
+
+## all we do is copy the files into the proper directory in the initrd
+for bins in ${BINS}; do
+
+    echo $bins
+    ## figure out where binary lives
+    bins_loc=$(which $bins)
+    bins_dir_loc=$(which $bins | xargs -I '{}' dirname '{}')    
+
+    echo $bins_loc
+    echo $bins_dir_loc
+    
+    ## set up directory tree and copy bins here
+    mkdir -p "${MYINIT}/${bins_dir_loc}"
+    cp $bins_loc "${MYINIT}/${bins_dir_loc}"
+    
+    ## figure out library dependencies of $bins
+    libs_loc=$(ldd $bins_loc | grep "=> /" | awk '{print $3}')
+
+    ## set up directory tree and copy libs here
+    for libs in ${libs_loc}; do
+	libs_dir=$(dirname $libs)
+	
+	echo $libs
+	echo $libs_dir
+	
+	mkdir -p "${MYINIT}/${libs_dir}"
+	cp $libs "${MYINIT}/${libs_dir}"
+    done
+    echo "+++++++++++++"
+done
