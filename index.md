@@ -3,9 +3,13 @@ My research interests are generally in operating systems and distributed systems
 
 Prior to Hamilton College, I earned my PhD at Boston University and was a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat for three years and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration for two years. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
 
-Additional information: [CV](https://handong32.github.io/HanDongCV.pdf), [Research Statement](https://handong32.github.io/HanDongResearchStatement.pdf), [Teaching Statement](https://handong32.github.io/HanDongTeachingStatement.pdf)).
+Additional information:  
+[CV](https://handong32.github.io/HanDongCV.pdf)  
+[Research Statement](https://handong32.github.io/HanDongResearchStatement.pdf)  
+[Teaching Statement](https://handong32.github.io/HanDongTeachingStatement.pdf)  
+[PhD Thesis](https://handong32.github.io/PhdThesis.pdf)
 
-## Contact Me
+## Contact Information
 Hamilton College  
 Department of Computer Science  
 198 College Hill Road  
@@ -16,6 +20,7 @@ Office: Taylor Science Center 2015B
 E-mail: first initial last name AT hamilton DOT edu
 
 ## Publications
+```
 Towards Performance and Energy Aware Kubernetes Scheduler. Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
 
 Taming and Controlling Performance and Energy Trade-offs Automatically in Network Applications. Han Dong, Yara Awad, Sanjay Arora, Orran Krieger, Jonathan Appavoo. 2024. http://arxiv.org/abs/2502.14987
@@ -42,4 +47,4 @@ Hybrid Deterministic/Monte Carlo Neutronics using GPU Accelerators. Jeff Willert
 Cross-Platform OpenCL Code and Performance Portability for CPU and GPU Architectures Investigated with a Climate Physics Model. Han Dong, Dibyajyoti Ghosh, Fahad Zafar, Shujia Zhou. Proceedings of Fifth International Workshop on Parallel Programming Models and Systems Software for High-End Computing, September 10, 2012, Pittsburgh, PA. 
 
 X10-Enabled MapReduce. Han Dong, Shujia Zhou, David P. Grove. Proceedings of the Fourth Conference on Partitioned Global Address Space Programming Model, October 12, 2010, New York, NY. 
-
+```
