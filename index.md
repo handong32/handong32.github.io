@@ -1,17 +1,8 @@
-## Work & Research
+## About Me
+My research interests are generally in operating systems and distributed systems. Specifically, I am interested in tackling the sustainability of datacenter-scale computing with a focus on improving a system's overall performance and energy efficiency. Towards this, I work in the interface between software and hardware and employ systems optimizations and machine learning techniques to improve upon existing software-hardware heuristics. 
 
-#### Graduate Student @ [Scalable and Elastic Systems Lab](http://sesa.github.io/) 
+Prior to Hamilton College, I earned my PhD at Boston University and was a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat for three years and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration for two years. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
 
+Additional information: [CV](https://handong32.github.io/HanDongCV.pdf), my research statement, and my teaching statement.
 
 ## Publications
-
-## Education
-
-## Teaching Experience
-
-#### Teaching Fellow @ [BU](https://www.bu.edu)
-- CS 210: Introduction to Computer Systems -- <em>(Spring 2015, Spring 2016, Fall 2017)</em>
-- CS 451/651: Distributed Systems -- <em>(Spring 2018, Fall 2018, Spring 2020)</em>
-
-#### Teaching Fellow @ [UMBC](https://www.umbc.edu)
-- CS 491/671 Parallel and Distributed Processing -- <em>(Spring 2012)</em>
