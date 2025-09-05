@@ -4,10 +4,10 @@ My research interests are generally in operating systems and distributed systems
 Prior to Hamilton College, I earned my PhD at Boston University and was a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat for three years and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration for two years. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
 
 Additional information:  
-[CV](https://handong32.github.io/HanDongCV.pdf)  
-[Research Statement](https://handong32.github.io/HanDongResearchStatement.pdf)  
-[Teaching Statement](https://handong32.github.io/HanDongTeachingStatement.pdf)  
-[PhD Thesis](https://handong32.github.io/PhDThesis.pdf)
+[CV](https://handong32.github.io/docs/HanDongCV.pdf)  
+[Research Statement](https://handong32.github.io/docs/HanDongResearchStatement.pdf)  
+[Teaching Statement](https://handong32.github.io/docs/HanDongTeachingStatement.pdf)  
+[PhD Thesis](https://handong32.github.io/docs/PhDThesis.pdf)
 
 ## Contact Information
 Hamilton College  
@@ -21,7 +21,7 @@ E-mail: first initial last name AT hamilton DOT edu
 
 ## Publications
 
-1. Towards Performance and Energy Aware Kubernetes Scheduler. Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
+1. [Towards Performance and Energy Aware Kubernetes Scheduler](https://handong32.github.io/docs/3757892.3757902.pdf). Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
 
 2. Taming and Controlling Performance and Energy Trade-offs Automatically in Network Applications. Han Dong, Yara Awad, Sanjay Arora, Orran Krieger, Jonathan Appavoo. 2024. http://arxiv.org/abs/2502.14987
 
