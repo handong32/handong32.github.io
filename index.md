@@ -7,7 +7,7 @@ Additional information:
 [CV](https://handong32.github.io/HanDongCV.pdf)  
 [Research Statement](https://handong32.github.io/HanDongResearchStatement.pdf)  
 [Teaching Statement](https://handong32.github.io/HanDongTeachingStatement.pdf)  
-[PhD Thesis](https://handong32.github.io/PhdThesis.pdf)
+[PhD Thesis](https://handong32.github.io/PhDThesis.pdf)
 
 ## Contact Information
 Hamilton College  
