@@ -49,3 +49,20 @@ E-mail: first initial last name AT hamilton DOT edu
 
 14. X10-Enabled MapReduce. Han Dong, Shujia Zhou, David P. Grove. Proceedings of the Fourth Conference on Partitioned Global Address Space Programming Model, October 12, 2010, New York, NY. 
 
+## Online Talks
+1. PEAKS: Orchestrating Power-Aware Kubernetes Scheduling. 08/16/2024. https://www.youtube.com/watch?v=9orOkUztJHs. DevConf, Boston, MA.
+
+2. A Generic ML-enhanced Controller that Optimizes Network Application Energy Efficiency. 10/30/2023. https://www.youtube.com/watch?v=9FEUY0DxZ0E, Netdev 0x17
+ 
+3. Impact of OS Design and Hardware Configuration on the Power Performance Tradeoff. 2/14/2020. https://www.youtube.com/watch?v=PkHa1nL9c-E. BU Cloud Computing Workshop, Boston, MA. 
+
+4. Automatic Configuration of Complex Hardware. 8/15/2019. https://www.youtube.com/watch?v=8UQTlNQTKtQ, DevConf.US, Boston, MA. 
+
+5. A Demonstration of Adapting HW to SW Needs for Network Workloads. 10/30/2018. https://youtube.com/watch?v=2cfRayVVaWI. Fourth Annual Mass Open Cloud (MOC) Workshop, Boston, MA. 
+
+## Professional Activities
+IEEE International Conference on Cloud Engineering'15 - Sub-reviewer  
+CloudMICRO'21 - Sub-reviewer  
+IEEE Access (2023 - 2024) - Reviewer  
+USENIX Annual Technical Conference (ATC)' 24 - Extended Review Committee  
+USENIX Annual Technical Conference (ATC)' 25 - Review Committee  
