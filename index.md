@@ -3,6 +3,43 @@ My research interests are generally in operating systems and distributed systems
 
 Prior to Hamilton College, I earned my PhD at Boston University and was a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat for three years and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration for two years. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
 
-Additional information: [CV](https://handong32.github.io/HanDongCV.pdf), my research statement, and my teaching statement.
+Additional information: [CV](https://handong32.github.io/HanDongCV.pdf), [Research Statement](https://handong32.github.io/HanDongResearchStatement.pdf), [Teaching Statement](https://handong32.github.io/HanDongTeachingStatement.pdf)).
+
+## Contact Me
+Hamilton College  
+Department of Computer Science  
+198 College Hill Road  
+Clinton, NY 13323
+
+
+Office: Taylor Science Center 2015B  
+E-mail: first initial last name AT hamilton DOT edu
 
 ## Publications
+Towards Performance and Energy Aware Kubernetes Scheduler. Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
+
+Taming and Controlling Performance and Energy Trade-offs Automatically in Network Applications. Han Dong, Yara Awad, Sanjay Arora, Orran Krieger, Jonathan Appavoo. 2024. http://arxiv.org/abs/2502.14987
+Can OS Specialization Give New Life to Old Carbon in the Cloud? Han Dong, Sanjay Arora, Orran Krieger, Jonathan Appavoo. 2024. In The 17th ACM International Systems and Storage Conference (SYSTOR ’24), September 23–24, 2024, Virtual, Israel. ACM, New York, NY, USA, 8 pages. https://doi.org/10.1145/3688351.3689158 
+
+Slowing Down for Performance and Energy: An OS-Centric Analysis of Network Applications. Han Dong, Sanjay Arora, Yara Awad, Tommy Unger, Orran Krieger, Jonathan Appavoo. 2021. https://arxiv.org/abs/2112.07010 
+
+SEUSS: Skip Redundant Paths to Make Serverless Fast. James Cadden, Thomas Unger, Yara Awad, Han Dong, Orran Krieger, and Jonathan Appavoo. Proceedings of the Fifteenth European Conference on Computer Systems (EuroSys '20). Association for Computing Machinery, New York, NY, USA, Article 32, 1–15. DOI:https://doi.org/10.1145/3342195.3392698 
+
+EbbRT: A Framework for Building Per-Application Library Operating Systems. Dan Schatzberg, James Cadden, Han Dong, Orran Krieger, and Jonathan Appavoo. Proceedings of the 12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 2016), November 2–4, 2016, Savannah, GA. 
+
+A Scalable System for Community Discovery in Twitter During Hurricane Sandy. Yin Huang, Han Dong, Yelena Yesha and Shujia Zhou. SCRAMBL: The 1st Workshop on Scalable Computing for Real-Time Big Data Applications, May 26-29, 2014, Chicago, IL. 
+
+Web-based, GPU-accelerated Monte Carlo Simulation and Visualization of Indirect Radiation Imaging Detector Performance. Han Dong, Diksha Sharma and Aldo Badano. Medical Physics, 41, 121907 (2014), DOI:http://dx.doi.org/10.1118/1.4901516 
+
+A Compendium of Publicly Available Monte Carlo Transport Codes (including new tools) for the Simulation of Radiation Imaging Detectors. Diksha Sharma, Han Dong, Yuan Fang, Aldo Badano, Proc. SPIE 8668, Medical Imaging 2013: Physics of Medical Imaging, 866858 (19 March 2013); https://doi.org/10.1117/12.2007434 
+
+Social Media Data Analytics Applied to Hurricane Sandy. Han Dong, Milton Halem, Shujia Zhou. Proceedings of 2013 ASE/IEEE International Conference on Social Computing, September 8- 14, 2013, Washington, DC. 
+
+A Real-Time Radiation Dose Monitoring System for Patients and Staff During Interventional Fluoroscopy using a GPU Accelerated Monte Carlo Simulator and an Automatic 3D Localization System based on a Kinect Depth Camera. Andreu Badal-Soler, Fahad Zafar, Han Dong, Aldo Badano. Proceedings of SPIE (The International Society for Optics and Photonics) Medical Imaging 2013, Lake Buena Vista, Florida.
+
+Hybrid Deterministic/Monte Carlo Neutronics using GPU Accelerators. Jeff Willert, C. T. Kelley, D. A. Knoll, Han Dong, Mahesh Ravishankar, Paul Sathre, Michael Sullivan, William Taitano. Proceedings of 11th International Symposium on Distributed Computing and Applications to Business, Engineering & Science, October 19 – 22, 2012, Guilin, Guangxi, China. 
+
+Cross-Platform OpenCL Code and Performance Portability for CPU and GPU Architectures Investigated with a Climate Physics Model. Han Dong, Dibyajyoti Ghosh, Fahad Zafar, Shujia Zhou. Proceedings of Fifth International Workshop on Parallel Programming Models and Systems Software for High-End Computing, September 10, 2012, Pittsburgh, PA. 
+
+X10-Enabled MapReduce. Han Dong, Shujia Zhou, David P. Grove. Proceedings of the Fourth Conference on Partitioned Global Address Space Programming Model, October 12, 2010, New York, NY. 
+
