@@ -1,7 +1,7 @@
 ## About Me
 My research interests are generally in operating systems and distributed systems. Specifically, I am interested in tackling the sustainability of datacenter-scale computing with a focus on improving a system's overall performance and energy efficiency. Towards this, I work in the interface between software and hardware and employ systems optimizations and machine learning techniques to improve upon existing software-hardware heuristics. 
 
-Prior to Hamilton College, I earned my PhD at Boston University and was a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat for three years and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration for two years. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
+Prior to Hamilton College, I earned my PhD and worked as a postdoctoral associate at Boston University. I have also worked as a researcher for Red Hat and as an Oak Ridge Institute for Science and Education (ORISE) Fellow in the Division of Imaging and Applied Mathematics at the Food and Drug Administration. Outside of the classroom, I enjoy reading poetry, visiting art museums, taking care of plants, snowboarding, and tinkering with small microcontrollers.
 
 Additional information:  
 [CV](https://handong32.github.io/docs/HanDongCV.pdf)  
@@ -48,6 +48,17 @@ E-mail: first initial last name AT hamilton DOT edu
 13. [Cross-Platform OpenCL Code and Performance Portability for CPU and GPU Architectures Investigated with a Climate Physics Model](https://handong32.github.io/docs/openclclimate.pdf). Han Dong, Dibyajyoti Ghosh, Fahad Zafar, Shujia Zhou. Proceedings of Fifth International Workshop on Parallel Programming Models and Systems Software for High-End Computing, September 10, 2012, Pittsburgh, PA. 
 
 14. [X10-Enabled MapReduce. Han Dong, Shujia Zhou, David P. Grove](https://handong32.github.io/docs/x10mapreduce.pdf). Proceedings of the Fourth Conference on Partitioned Global Address Space Programming Model, October 12, 2010, New York, NY. 
+
+## Articles
+
+1. [Power surge: the push for sustainability in high-performance computing and AI workloads](https://handong32.github.io/docs/RHRQ2.pdf). https://research.redhat.com/blog/article/power-surge-the-push-for-sustainability-in-high-performance-computing-and-ai-workloads/
+
+1. [Operating Systems Approach to Sustainability](https://handong32.github.io/docs/nsf.pdf). https://edas.info/web/nsf-wscs24/accepted-contributions.html 
+
+2. [Tuning Linux kernel Policies for Energy Efficiency with Machine Learning](https://handong32.github.io/docs/RHRQ1.pdf). https://research.redhat.com/blog/article/tuning-linux-kernel-policies-for-energy-efficiency-with-machine-learning/
+
+3. [A Tutorial on Building Custom Linux Appliances](https://handong32.github.io/docs/usenixlogin.pdf). https://www.usenix.org/publications/loginonline/building-linux-appliances
+
 
 ## Online Talks
 1. [PEAKS: Orchestrating Power-Aware Kubernetes Scheduling](https://www.youtube.com/watch?v=9orOkUztJHs). 08/16/2024. DevConf, Boston, MA.
