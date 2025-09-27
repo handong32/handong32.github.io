@@ -19,6 +19,9 @@ Clinton, NY 13323
 Office: Taylor Science Center 2015B  
 E-mail: first initial last name AT hamilton DOT edu
 
+## Current Projects
+[ECKO](https://handong32.github.io/ecko/index.md)
+
 ## Publications
 
 1. [Towards Performance and Energy Aware Kubernetes Scheduler](https://handong32.github.io/docs/3757892.3757902.pdf). Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
