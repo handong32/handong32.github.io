@@ -20,7 +20,7 @@ Office: Taylor Science Center 2015B
 E-mail: first initial last name AT hamilton DOT edu
 
 ## Current Projects
-[ECKO](https://handong32.github.io/ecko/)
+[ECKO](https://handong32.github.io/ecko)
 
 ## Publications
 
