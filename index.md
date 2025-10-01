@@ -19,7 +19,8 @@ Clinton, NY 13323
 Office: Taylor Science Center 2015B  
 E-mail: first initial last name AT hamilton DOT edu
 
-## Current Projects
+
+## [Computer Systems Research @ Hamilton College](https://github.com/publiusys) 
 [pollms](https://handong32.github.io/docs/pollms.pdf)  
 [ecko](https://handong32.github.io/ecko)
 
