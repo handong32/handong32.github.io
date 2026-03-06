@@ -26,7 +26,7 @@ E-mail: first initial last name AT hamilton DOT edu
 
 ## Publications
 
-1. Dong H, Arora S, Awad Y, Krieger O, Appavoo J. Taming and Controlling Performance and Energy Trade-Offs Automatically in Network Applications. Cloud Computing and Data Science [Internet]. 2026 Mar. 6 [cited 2026 Mar. 7];7(1):191-214. Available from: https://ojs.wiserpub.com/index.php/CCDS/article/view/9014
+1. Dong H, Arora S, Awad Y, Krieger O, Appavoo J. Taming and Controlling Performance and Energy Trade-Offs Automatically in Network Applications. Cloud Computing and Data Science [Internet]. 2026 Mar. 6;7(1):191-214. Available from: https://ojs.wiserpub.com/index.php/CCDS/article/view/9014
  
 2. [Towards Performance and Energy Aware Kubernetes Scheduler](https://handong32.github.io/docs/3757892.3757902.pdf). Han Dong, Parul Singh, Yara Awad, Felix George, Krishnasuri Narayanam, Sanjay Arora, and Jonathan Appavoo. 2025. SIGENERGY Energy Inform. Rev. 5, 2 (July 2025), 69–75. https://doi.org/10.1145/3757892.3757902
 
